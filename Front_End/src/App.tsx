@@ -12,42 +12,32 @@ import AuthContext from './store/auth-context'
 function App() {
   const authCtx = useContext(AuthContext)
   const userRole = authCtx.userRole
+  
   return (
     <Layout>
       <Switch>
+
         <Route path="/" exact>
           <HomePage />
         </Route>
 
-        {/* {!authCtx.isLoggedIn && (
+        {!authCtx.isLoggedIn && (
           <Route path="/login">
             <LoginPage />
           </Route>
-        )} */}
-        <Route path="/login">
-          <LoginPage />
-        </Route>
-
-        {/* {userRole === 'SuperAdmin' && (
+        )}
+        
+        {userRole === 'superadmin' && (
           <Route path="/signup">
             <SignupPage />
           </Route>
-        )} */}
-        <Route path="/signup">
-          <SignupPage />
-        </Route>
-        <Route path="/hi">
-          <h1>Hi akash</h1>
-        </Route>
-
-        {/* <Route path="/profile">
+        )}
+        
+        <Route path="/profile">
           {authCtx.isLoggedIn && <UserProfile />}
           {!authCtx.isLoggedIn && <Redirect to="/login" />}
-        </Route> */}
-        <Route path="/profile">
-          <UserProfile />
         </Route>
-
+        
         <Route path="*">
           <Redirect to="/" />
         </Route>

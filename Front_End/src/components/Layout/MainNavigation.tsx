@@ -26,7 +26,7 @@ const MainNavigation: React.FC = () => {
               <Link to="/login">Login</Link>
             </li>
           )}
-          {authCtx.userRole === 'superAdmin' && (
+          {authCtx.userRole === 'superadmin' && (
             <li>
               <Link to="/signup">Signup New User</Link>
             </li>

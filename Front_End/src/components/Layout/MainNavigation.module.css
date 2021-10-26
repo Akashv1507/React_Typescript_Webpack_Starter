@@ -50,6 +50,6 @@
 }
 
 .header button:hover {
-  background-color: #c291e2;
+  background-color: rgb(173, 233, 233);
   color: #38015c;
 }

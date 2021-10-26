@@ -18,6 +18,7 @@ const SignupForm: React.FC = () => {
   const passwordInputRef = useRef<HTMLInputElement>(null)
   const confirmPassInputRef = useRef<HTMLInputElement>(null)
   const roleRef = useRef<HTMLSelectElement>(null)
+  
   const submitHandler = (event: React.FormEvent) => {
     event.preventDefault()
 
@@ -30,7 +31,7 @@ const SignupForm: React.FC = () => {
     if (enteredName.trim().length === 0) {
       setError({
         title: 'Invalid Name',
-        message: 'Please enter a valid Name (> 0)',
+        message: 'Please enter a valid Name (Length> 0)',
       })
       return
     }
