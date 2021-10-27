@@ -6,7 +6,7 @@ import json
 # initialize the app config global variable
 appConf = {}
 
-def loadAppConfig(fName="core/secrets/config.json"):
+def loadAppConfig(fName="app/secrets/config.json"):
     # load config json into the global variable
     with open(fName) as f:
         global appConf
