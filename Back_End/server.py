@@ -4,10 +4,10 @@ from app import create_app,db
 
 configDict = getAppConfigDict()
 app = create_app()
-
-# execute createdb function to create tables
-def createdb():
-    db.create_all()
+app.app_context().push()
+# execute this 2 lines on terminal to create db
+# from app import db, create_app
+# db.create_all(app=create_app())
 
 if __name__ == "__main__":
     serverMode: str = configDict['mode']

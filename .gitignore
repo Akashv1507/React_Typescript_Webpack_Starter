@@ -4,6 +4,7 @@ config.json
 project_env/
 VSCodeCounter
 __pycache__/
+site.db
 # Distribution / packaging 
 .Python build/ 
 develop-eggs/ 

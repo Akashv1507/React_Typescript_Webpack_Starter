@@ -12,10 +12,8 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = configDict['SQLALCHEMY_DATABASE_URI']
     db.init_app(app)
     
-
     # from app.auth.models import User, Role,user_role
     from app.auth.routes import authBp
-    # # app.register_blueprint(auth, url_prefix="/auth/")
-    app.register_blueprint(authBp)
+    app.register_blueprint(authBp,url_prefix="/auth/")
 
     return app 
