@@ -31,7 +31,7 @@ def login():
     for role in user.roles:
         userRoles.append(role.role_name)
     if check_password_hash(user.password, enteredPass):
-        token = jwt.encode({'public_id' : user.public_id, "exp": dt.datetime.now(tz=dt.timezone.utc) + dt.timedelta(seconds=30)}, configDict['flaskSecret'], algorithm="HS256" )
+        token = jwt.encode({'public_id' : user.public_id, "exp": dt.datetime.now(tz=dt.timezone.utc) + dt.timedelta(minutes=1)}, configDict['flaskSecret'], algorithm="HS256" )
 
         return jsonify({'token' : token, 'userName':(user.name).upper(), "public_id": user.public_id, "userRoles":userRoles })
 
@@ -40,9 +40,9 @@ def login():
 @authBp.route("/signup")
 def signup():
     
-    data = request.get_json(silent=True)
+    data = request.get_json()
     if not data or ("email" not in data) or ("password" not in data) or ("name" not in data) or ("userRole" not in data):
-        return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
+        return jsonify({'message':"could not verify"}), 401
 
     enteredName = data["name"]
     enteredEmail = data["email"]
@@ -63,7 +63,7 @@ def verifyEmail():
     
     data = request.get_json(silent=True)
     if not data or ("email" not in data) :
-        return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
+       return jsonify({'message':"could not verify"}), 401
 
     enteredEmail = data["email"]
     user = User.query.filter_by(email=enteredEmail).first()
@@ -75,6 +75,8 @@ def verifyEmail():
     
 @authBp.route("/checkAuthorization")
 @token_required
-def checkAuthorization(currUser):
-
-    return jsonify({'message': 'Authorization successfull', 'currUser':currUser.name, 'email':currUser.email})
+def checkAuthorization(current_user, message):
+    if current_user==None:
+        return jsonify({'message': message})
+    else:
+        return jsonify({'message': message, 'userName':current_user.name, 'email':current_user.email})

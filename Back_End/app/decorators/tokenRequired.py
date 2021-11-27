@@ -15,17 +15,21 @@ def token_required(f):
             token = request.headers['x-access-token']
         
         if not token:
-            return jsonify({'message' : 'Token is missing!'}), 401
+            print("token is missing")
+            return f(current_user=None, message= "Token is Missing",*args, **kwargs)
         try: 
+            # expiration time will be taken care by jwt automatically
             data = jwt.decode(token, configDict['flaskSecret'], algorithms=["HS256"])
            
             current_user = User.query.filter_by(public_id=data['public_id']).first()
             
         except jwt.ExpiredSignatureError:
             print("Token expired. Get new one")
+            return f(current_user=None,message= "Token expired. Get new one",*args, **kwargs)
         except jwt.InvalidTokenError:
             print("Invalid Token")
+            return f(current_user=None,message= "Invalid Token",*args, **kwargs)
 
-        return f(current_user,*args, **kwargs)
+        return f(current_user, message= "Token is valid",*args, **kwargs)
 
     return decorated
