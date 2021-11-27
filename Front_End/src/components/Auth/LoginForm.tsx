@@ -48,8 +48,7 @@ const LoginForm: React.FC = () => {
     
     authCtx.login('3454gfdv', 3245, 'akash', 'superadmin')
   
-    alert.show('Welcome on board !! You are successfully logged in',{type:'success'})
-   
+    alert.show('Welcome on board !! You are successfully logged in',{type:'success'}) 
     
   }
 
