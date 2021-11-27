@@ -1,3 +1,4 @@
+from enum import unique
 from app import db
 
 user_role = db.Table('user_role',
@@ -8,7 +9,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(50), unique=True)
     name = db.Column(db.String(50))
-    email = db.Column(db.String(50))
+    email = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(80))
     roles = db.relationship('Role', secondary=user_role,
                              backref = db.backref('users', lazy='dynamic'))

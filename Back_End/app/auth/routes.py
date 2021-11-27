@@ -6,18 +6,18 @@ import jwt
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime as dt
 from app.appConfig import getAppConfigDict
-
+from app.decorators.tokenRequired import token_required
 authBp = Blueprint("authBp", __name__)
 
 configDict = getAppConfigDict()
 
-@authBp.route("/login")
+@authBp.route("/login", methods=['POST'])
 def login():
     
-    data = request.get_json(silent=True)
+    data = request.get_json()
     
     if not data or ("email" not in data) or ("password" not in data):
-        return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
+        return jsonify({'message':"could not verify"}), 401
 
     enteredEmail = data["email"]
     enteredPass =data["password"]
@@ -26,16 +26,16 @@ def login():
     userRoles = []
 
     if not user:
-        return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
+        return jsonify({'message':"could not verify"}), 401
     # appending all user roles to list
     for role in user.roles:
         userRoles.append(role.role_name)
     if check_password_hash(user.password, enteredPass):
-        token = jwt.encode({'public_id' : user.public_id, 'exp' : str(dt.datetime.now() + dt.timedelta(minutes=30))}, configDict['flaskSecret'] )
+        token = jwt.encode({'public_id' : user.public_id, "exp": dt.datetime.now(tz=dt.timezone.utc) + dt.timedelta(seconds=30)}, configDict['flaskSecret'], algorithm="HS256" )
 
         return jsonify({'token' : token, 'userName':(user.name).upper(), "public_id": user.public_id, "userRoles":userRoles })
 
-    return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
+    return jsonify({'message':"could not verify"}), 401
     
 @authBp.route("/signup")
 def signup():
@@ -73,3 +73,8 @@ def verifyEmail():
     else:
         return jsonify({'message' : 'Email is Unique' ,'isUnique':True})
     
+@authBp.route("/checkAuthorization")
+@token_required
+def checkAuthorization(currUser):
+
+    return jsonify({'message': 'Authorization successfull', 'currUser':currUser.name, 'email':currUser.email})
